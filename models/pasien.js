@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       rm: DataTypes.STRING,
       verified: DataTypes.BOOLEAN,
       otp: DataTypes.INTEGER,
+      imgUrl: DataTypes.TEXT,
     },
     {
       sequelize,

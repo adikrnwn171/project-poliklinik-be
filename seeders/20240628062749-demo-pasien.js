@@ -29,6 +29,19 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        name: "Steve",
+        email: "steve@gmail.com",
+        password: hashedPassword,
+        address: "depok",
+        idNumber: "3309111030010003",
+        phone: "08123456777",
+        rm: "202406-002",
+        verified: true,
+        otp: "592713",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 

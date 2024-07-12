@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const decodeToken = require("../utils/decodeToken");
 const poli = require("../models/poli");
 const { where } = require("sequelize");
+const imagekit = require("../lib/imageKit");
 
 const getAllDokter = async (req, res) => {
   try {
@@ -24,8 +25,18 @@ const getAllDokter = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { dokterName, email, password, address, phone, idPoli } = req.body;
   try {
+    const { dokterName, email, password, address, phone, idPoli } = req.body;
+    const file = req.file;
+
+    const split = file.originalname.split(".");
+    const ext = split[split.length - 1];
+
+    const img = await imagekit.upload({
+      file: file.buffer,
+      fileName: `IMG-${Date.now()}.${ext}`,
+    });
+
     const dokter = await Dokter.findOne({ where: { email } });
     if (dokter) {
       return res.status(400).json({ message: "Email already used" });
@@ -40,6 +51,7 @@ const register = async (req, res) => {
       address,
       phone,
       idPoli,
+      imgUrl: img.url,
     });
 
     res.status(201).json({
@@ -113,8 +125,18 @@ const showDokter = async (req, res) => {
 };
 
 const updateDokter = async (req, res) => {
-  const { dokterName, email, password, address, phone, idPoli } = req.body;
   try {
+    const { dokterName, email, password, address, phone, idPoli } = req.body;
+    const file = req.file;
+
+    const split = file.originalname.split(".");
+    const ext = split[split.length - 1];
+
+    const img = await imagekit.upload({
+      file: file.buffer,
+      fileName: `IMG-${Date.now()}.${ext}`,
+    });
+
     if (!req.headers.authorization) {
       return res.status(401).send({ message: "Unauthorized" });
     }
@@ -132,6 +154,7 @@ const updateDokter = async (req, res) => {
     dokter.address = address;
     dokter.phone = phone;
     dokter.idPoli = idPoli;
+    dokter.imgUrl = img.url;
     await dokter.save();
 
     res.status(200).json({
