@@ -21,8 +21,18 @@ const getAllPasien = async (req, res) => {
 };
 
 const register = async (req, res) => {
-  const { name, email, password, address, idNumber, phone } = req.body;
   try {
+    const { name, email, password, address, idNumber, phone } = req.body;
+    const file = req.file;
+
+    const split = file.originalname.split(".");
+    const ext = split[split.length - 1];
+
+    const img = await imagekit.upload({
+      file: file.buffer,
+      fileName: `IMG-${Date.now()}.${ext}`,
+    });
+
     const pasien = await Pasien.findOne({ where: { email: req.body.email } });
     if (pasien) {
       return res.status(400).json({ message: "Email already used" });
@@ -45,6 +55,7 @@ const register = async (req, res) => {
       phone,
       rm,
       otp,
+      imgUrl: img.url,
     });
 
     res.status(201).json({
@@ -142,6 +153,15 @@ const getUserByToken = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { name, email, password, address, idNumber, phone } = req.body;
+    const file = req.file;
+
+    const split = file.originalname.split(".");
+    const ext = split[split.length - 1];
+
+    const img = await imagekit.upload({
+      file: file.buffer,
+      fileName: `IMG-${Date.now()}.${ext}`,
+    });
 
     if (!req.headers.authorization) {
       return res.status(401).send({ message: "You dont have authorized" });
@@ -163,6 +183,7 @@ const update = async (req, res) => {
     pasien.address = address;
     pasien.idNumber = idNumber;
     pasien.phone = phone;
+    pasien.imgUrl = img.url;
 
     await pasien.save();
 
