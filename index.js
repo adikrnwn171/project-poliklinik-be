@@ -1,10 +1,11 @@
 require("dotenv").config();
-
-const express = require('express');
+const cors = require("cors");
+const express = require("express");
 const app = express();
 const port = process.env.PORT;
 const r = require("./routes");
 
+app.use(cors());
 app.use(express.json()); // Middleware untuk parsing JSON
 
 // Rute dasar
