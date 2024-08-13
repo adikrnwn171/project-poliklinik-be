@@ -7,6 +7,7 @@ const sendOtp = require("../utils/sendOtp");
 const jwt = require("jsonwebtoken");
 const decodeToken = require("../utils/decodeToken");
 const sendResetPassword = require("../utils/sendResetPassword");
+const imagekit = require("../lib/imageKit");
 
 const getAllPasien = async (req, res) => {
   try {

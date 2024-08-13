@@ -5,7 +5,7 @@ const dokterController = require("../controllers/dokter");
 const Uploader = require("../middlewares/uploaders");
 
 r.get("/", dokterController.getAllDokter);
-r.post("/register", dokterController.register);
+r.post("/register", Uploader.single("image"), dokterController.register);
 r.post("/login", dokterController.login);
 r.get("/detail", dokterController.showDokter);
 r.put("/update", Uploader.single("image"), dokterController.updateDokter);
