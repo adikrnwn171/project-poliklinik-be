@@ -81,6 +81,7 @@ const login = async (req, res) => {
           id: dokter.id,
           username: dokter.dokterName,
           email: dokter.email,
+          role: "dokter",
         },
         "rahasia"
       );

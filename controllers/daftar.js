@@ -71,6 +71,43 @@ const getDaftarById = async (req, res) => {
   }
 };
 
+const getDaftarByDoctor = async (req, res) => {
+  try {
+    const decodedToken = decodeToken(req.headers.authorization);
+    const userId = decodedToken.id;
+
+    const payload = await Daftar.findAll({
+      include: [
+        {
+          model: sequelize.model("Pasien"),
+          attributes: ["name", "phone", "rm"],
+        },
+        {
+          model: sequelize.model("JadwalPeriksa"),
+          attributes: ["hari", "jamMulai", "jamSelesai"],
+          include: {
+            model: sequelize.model("Dokter"),
+            attributes: ["id", "dokterName"],
+            where: { id: userId },
+            include: {
+              model: sequelize.model("Poli"),
+              attributes: ["namaPoli"],
+            },
+          },
+          required: true,
+        },
+      ],
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: payload,
+    });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
 const createDaftar = async (req, res) => {
   const { idPasien, idJadwal, keluhan } = req.body;
   try {
@@ -108,4 +145,5 @@ module.exports = {
   getDaftar,
   createDaftar,
   getDaftarById,
+  getDaftarByDoctor,
 };
